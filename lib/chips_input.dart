@@ -14,8 +14,7 @@ typedef ChipsInputSuggestions<T> = List<T> Function(String query);
 typedef ChipSelected<T> = void Function(T data, bool selected);
 typedef ChipsBuilder<T extends Object> = Widget Function(
     BuildContext context, ChipsInputState<T> state, T data);
-typedef SuggestionBuilder<T extends Object> = Widget Function(
-    BuildContext context, T data);
+typedef SuggestionBuilder<T extends Object> = Widget Function(BuildContext context, T data);
 
 class ChipsInput<T extends Object> extends StatefulWidget {
   const ChipsInput({
@@ -74,10 +73,10 @@ class ChipsInput<T extends Object> extends StatefulWidget {
     this.scrollPhysics,
     this.restorationId,
   })  : assert(obscuringCharacter.length == 1),
-        smartDashesType = smartDashesType ??
-            (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
-        smartQuotesType = smartQuotesType ??
-            (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
+        smartDashesType =
+            smartDashesType ?? (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
+        smartQuotesType =
+            smartQuotesType ?? (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
         assert(
@@ -92,19 +91,16 @@ class ChipsInput<T extends Object> extends StatefulWidget {
           !expands || (maxLines == null && minLines == null),
           'minLines and maxLines must be null when expands is true.',
         ),
-        assert(!obscureText || maxLines == 1,
-            'Obscured fields cannot be multiline.'),
-        assert(maxLength == null ||
-            maxLength == TextField.noMaxLength ||
-            maxLength > 0),
+        assert(!obscureText || maxLines == 1, 'Obscured fields cannot be multiline.'),
+        assert(maxLength == null || maxLength == TextField.noMaxLength || maxLength > 0),
         // Assert the following instead of setting it directly to avoid surprising the user by silently changing the value they set.
         assert(
             !identical(textInputAction, TextInputAction.newline) ||
                 maxLines == 1 ||
                 !identical(keyboardType, TextInputType.text),
             'Use keyboardType TextInputType.multiline when using TextInputAction.newline on a multiline TextField.'),
-        keyboardType = keyboardType ??
-            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
+        keyboardType =
+            keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         toolbarOptions = toolbarOptions ??
             (obscureText
                 ? const ToolbarOptions(
@@ -486,17 +482,14 @@ class ChipsInput<T extends Object> extends StatefulWidget {
   ChipsInputState<T> createState() => ChipsInputState<T>();
 }
 
-class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
-    with RestorationMixin {
+class ChipsInputState<T extends Object> extends State<ChipsInput<T>> with RestorationMixin {
   RestorableTextEditingController? _controller;
-  TextEditingController get _effectiveController =>
-      widget.controller ?? _controller!.value;
+  TextEditingController get _effectiveController => widget.controller ?? _controller!.value;
 
   List<T> _chips = [];
   final space = '\u200B'; //'\u200B'; // '*';
   FocusNode? _focusNode;
-  FocusNode get _effectiveFocusNode =>
-      widget.focusNode ?? (_focusNode ??= FocusNode());
+  FocusNode get _effectiveFocusNode => widget.focusNode ?? (_focusNode ??= FocusNode());
   bool get _isEnabled => widget.enabled ?? widget.decoration?.enabled ?? true;
 
   @override
@@ -523,8 +516,8 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
   }
 
   bool get _canRequestFocus {
-    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
-        NavigationMode.traditional;
+    final NavigationMode mode =
+        MediaQuery.maybeOf(context)?.navigationMode ?? NavigationMode.traditional;
     switch (mode) {
       case NavigationMode.traditional:
         return _isEnabled;
@@ -558,8 +551,7 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
     setState(() {
       _chips = [..._chips, newValue];
     });
-    if (widget.onChanged != null)
-      widget.onChanged!(_chips.toList(growable: false));
+    if (widget.onChanged != null) widget.onChanged!(_chips.toList(growable: false));
   }
 
   void _deleteLastChips(int numKeepChips) {
@@ -567,10 +559,9 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
       numKeepChips = 0;
     }
     setState(() {
-      _chips = _chips.take(numKeepChips).toList();
+      _chips = _chips..take(numKeepChips).toList();
     });
-    if (widget.onChanged != null)
-      widget.onChanged!(_chips.toList(growable: false));
+    if (widget.onChanged != null) widget.onChanged!(_chips.toList(growable: false));
   }
 
   void deleteChip(T data) {
@@ -579,8 +570,7 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
         _effectiveController.text = _effectiveController.text.substring(1);
         _chips = _chips..remove(data);
       });
-      if (widget.onChanged != null)
-        widget.onChanged!(_chips.toList(growable: false));
+      if (widget.onChanged != null) widget.onChanged!(_chips.toList(growable: false));
     }
   }
 
@@ -595,13 +585,11 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
   Widget build(BuildContext context) {
     final FocusNode focusNode = _effectiveFocusNode;
     final TextEditingController controller = _effectiveController;
-    final chipwidgets =
-        _chips.map((val) => widget.chipBuilder(context, this, val)).toList();
+    final chipwidgets = _chips.map((val) => widget.chipBuilder(context, this, val)).toList();
     final theme = Theme.of(context);
-    final TextStyle style =
-        theme.textTheme.subtitle1!.copyWith(height: 1.5).merge(widget.style);
-    Widget _defaultOptionsViewBuilder(BuildContext context,
-        AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
+    final TextStyle style = theme.textTheme.subtitle1!.copyWith(height: 1.5).merge(widget.style);
+    Widget _defaultOptionsViewBuilder(
+        BuildContext context, AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
       return _DefaultOptionsViewBuilder(
         onSelected: onSelected,
         options: options,
@@ -609,14 +597,13 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
       );
     }
 
-    Widget _emptyOptionsViewBuilder(BuildContext context,
-        AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
+    Widget _emptyOptionsViewBuilder(
+        BuildContext context, AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
       return Container();
     }
 
-    final maxReached = (widget.maxChips != null &&
-        widget.maxChips! <= _chips.length &&
-        _chips.length > 0);
+    final maxReached =
+        (widget.maxChips != null && widget.maxChips! <= _chips.length && _chips.length > 0);
 
     return RawAutocomplete<T>(
         focusNode: focusNode,
@@ -625,10 +612,8 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
           if (textEditingValue.text.length < _chips.length) {
             _deleteLastChips(textEditingValue.text.length);
           }
-          final options = widget
-              .findSuggestions(textEditingValue.text.replaceAll("$space", ""));
-          final notUsedOptions =
-              options.where((r) => !_chips.contains(r)).toList(growable: false);
+          final options = widget.findSuggestions(textEditingValue.text.replaceAll("$space", ""));
+          final notUsedOptions = options.where((r) => !_chips.contains(r)).toList(growable: false);
           return notUsedOptions;
         },
         onSelected: (T option) {
@@ -637,10 +622,8 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
         displayStringForOption: (T option) {
           return [..._chips.map((e) => "$space"), "$space"].join();
         },
-        fieldViewBuilder: (BuildContext context,
-            TextEditingController textEditingController,
-            FocusNode focusNode,
-            VoidCallback onFieldSubmitted) {
+        fieldViewBuilder: (BuildContext context, TextEditingController textEditingController,
+            FocusNode focusNode, VoidCallback onFieldSubmitted) {
           List<Widget> chipsAndTextField = [
             ...chipwidgets,
             IntrinsicWidth(
@@ -693,7 +676,7 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>>
                     hintText: widget.decoration?.hintText,
                     counterText: "",
                     isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 5)),
+                    contentPadding: EdgeInsets.symmetric(vertical: 4)),
               ),
             )
           ];
@@ -744,15 +727,13 @@ class _DefaultOptionsViewBuilder<T extends Object> extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Material(
-        elevation: 4.0,
         child: Container(
-          height: 200.0,
           child: ListView.builder(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             itemCount: options.length,
             itemBuilder: (BuildContext context, int index) {
               final T option = options.elementAt(index);
-              return GestureDetector(
+              return InkWell(
                 onTap: () {
                   onSelected(option);
                 },
@@ -765,3 +746,45 @@ class _DefaultOptionsViewBuilder<T extends Object> extends StatelessWidget {
     );
   }
 }
+
+// The default Material-style Autocomplete options.
+// class _DefaultOptionsViewBuilder<T extends Object> extends StatelessWidget {
+//   const _DefaultOptionsViewBuilder({
+//     Key? key,
+//     required this.onSelected,
+//     required this.options,
+//     required this.suggestionBuilder,
+//   }) : super(key: key);
+
+//   final AutocompleteOnSelected<T> onSelected;
+
+//   final Iterable<T> options;
+
+//   final SuggestionBuilder<T> suggestionBuilder;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Align(
+//       alignment: Alignment.topLeft,
+//       child: Material(
+//         elevation: 4.0,
+//         child: Container(
+//           height: 200.0,
+//           child: ListView.builder(
+//             padding: EdgeInsets.all(8.0),
+//             itemCount: options.length,
+//             itemBuilder: (BuildContext context, int index) {
+//               final T option = options.elementAt(index);
+//               return GestureDetector(
+//                 onTap: () {
+//                   onSelected(option);
+//                 },
+//                 child: suggestionBuilder(context, option),
+//               );
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
