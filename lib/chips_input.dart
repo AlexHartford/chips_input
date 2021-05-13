@@ -559,7 +559,7 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>> with Restor
       numKeepChips = 0;
     }
     setState(() {
-      _chips = _chips..take(numKeepChips).toList();
+      _chips = _chips.take(numKeepChips).toList();
     });
     if (widget.onChanged != null) widget.onChanged!(_chips.toList(growable: false));
   }
@@ -569,8 +569,8 @@ class ChipsInputState<T extends Object> extends State<ChipsInput<T>> with Restor
       setState(() {
         _chips = _chips..remove(data);
         _effectiveController.text = _effectiveController.text.substring(1);
-        _effectiveController.selection = TextSelection.fromPosition(
-            TextPosition(offset: _effectiveController.text.length));
+        _effectiveController.selection =
+            TextSelection.fromPosition(TextPosition(offset: _effectiveController.text.length));
       });
       if (widget.onChanged != null) widget.onChanged!(_chips.toList(growable: false));
     }
