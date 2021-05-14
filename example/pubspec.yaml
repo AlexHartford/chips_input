@@ -21,6 +21,8 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  # chips_input: 0.0.6
+  #   # path: ..
   chips_input:
     path: ..
   flutter:

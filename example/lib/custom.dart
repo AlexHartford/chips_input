@@ -45,49 +45,67 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Welcome to Flutter'),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                ChipsInput(
-                  initialValue: [mockResults[1]],
-                  findSuggestions: (String query) {
-                    if (query.isNotEmpty) {
-                      var lowercaseQuery = query.toLowerCase();
-                      final results = mockResults.where((profile) {
-                        return profile.name.toLowerCase().contains(query.toLowerCase());
-                      }).toList(growable: false)
-                        ..sort((a, b) => a.name
-                            .toLowerCase()
-                            .indexOf(lowercaseQuery)
-                            .compareTo(b.name.toLowerCase().indexOf(lowercaseQuery)));
-                      return results;
-                    }
-                    return mockResults;
-                  },
-                  onChanged: (data) {
-                    print(data);
-                  },
-                  chipBuilder: (context, state, Tag tag) {
-                    return InputChip(
-                      key: ObjectKey(tag),
-                      label: Text(tag.name),
-                      onDeleted: () => state.deleteChip(tag),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    );
-                  },
-                  suggestionBuilder: (context, Tag tag) {
-                    return ListTile(
-                      key: ObjectKey(tag),
-                      title: Text(tag.name),
-                      trailing: Text(tag.total.toString()),
+        body: ChipsInput(
+          initialValue: [mockResults[1]],
+          findSuggestions: (String query) {
+            if (query.isNotEmpty) {
+              var lowercaseQuery = query.toLowerCase();
+              final results = mockResults.where((profile) {
+                return profile.name.toLowerCase().contains(query.toLowerCase());
+              }).toList(growable: false)
+                ..sort((a, b) => a.name
+                    .toLowerCase()
+                    .indexOf(lowercaseQuery)
+                    .compareTo(b.name.toLowerCase().indexOf(lowercaseQuery)));
+              return results;
+            }
+            return mockResults;
+          },
+          onChanged: (data) {
+            print(data);
+          },
+          chipBuilder: (context, state, Tag tag) {
+            return InputChip(
+              key: ObjectKey(tag),
+              label: Text(tag.name),
+              onDeleted: () => state.deleteChip(tag),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            );
+          },
+          // suggestionBuilder: (context, Tag tag) {
+          //   return ListTile(
+          //     key: ObjectKey(tag),
+          //     title: Text(tag.name),
+          //     // tileColor: Colors.red,
+          //     trailing: Text(tag.total.toString()),
+          //   );
+          // },
+          optionsViewBuilder:
+              (context, AutocompleteOnSelected<Tag> onSelected, Iterable<Tag> tags) {
+            return Material(
+              child: Container(
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: tags.length,
+                  separatorBuilder: (_, __) => Divider(height: 1),
+                  itemBuilder: (BuildContext context, int index) {
+                    final Tag tag = tags.elementAt(index);
+                    return InkWell(
+                      onTap: () {
+                        onSelected(tag);
+                      },
+                      child: ListTile(
+                        key: ObjectKey(tag),
+                        title: Text(tag.name),
+                        tileColor: Colors.red,
+                        trailing: Text(tag.total.toString()),
+                      ),
                     );
                   },
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
