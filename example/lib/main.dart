@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
               initialValue: [mockResults[1]],
               findSuggestions: (String query) {
                 if (query.isNotEmpty) {
-                  var lowercaseQuery = query.toLowerCase();
+                  final lowercaseQuery = query.toLowerCase();
                   final results = mockResults.where((profile) {
                     return profile.name
                             .toLowerCase()
@@ -89,6 +89,7 @@ class MyApp extends StatelessWidget {
                 return mockResults;
               },
               onChanged: (data) {
+                // ignore: avoid_print
                 print(data);
               },
               chipBuilder: (context, state, AppProfile profile) {

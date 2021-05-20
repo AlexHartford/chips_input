@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:chips_input/chips_input.dart';
 
 void main() {
-  final allContacts = const [
+  const allContacts = [
     'John Doe',
     'Jane Doe',
     'John Smith',
@@ -18,11 +18,10 @@ void main() {
             initialValue: allContacts.sublist(1, 3),
             maxChips: 3,
             findSuggestions: (String query) => query.isNotEmpty
-                ? allContacts
-                    .where((_) => _.toLowerCase().contains(query.toLowerCase()))
-                    .toList()
+                ? allContacts.where((_) => _.toLowerCase().contains(query.toLowerCase())).toList()
                 : const [],
             onChanged: (contacts) {
+              // ignore: avoid_print
               print(contacts);
             },
             chipBuilder: (context, state, contact) {
@@ -51,11 +50,10 @@ void main() {
             initialValue: allContacts.sublist(1, 3),
             maxChips: 3,
             findSuggestions: (String query) => query.isNotEmpty
-                ? allContacts
-                    .where((_) => _.toLowerCase().contains(query.toLowerCase()))
-                    .toList()
+                ? allContacts.where((_) => _.toLowerCase().contains(query.toLowerCase())).toList()
                 : const [],
             onChanged: (contacts) {
+              // ignore: avoid_print
               print(contacts);
             },
             chipBuilder: (context, state, contact) {
